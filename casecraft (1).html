@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CASECRAFT — ร้านเคสโทรศัพท์ &amp; iPad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f2ee;
+    --panel:#ffffff;
+    --ink:#171929;
+    --ink-soft:#6b6f85;
+    --line:#e5e3db;
+    --accent:#ff4f64;
+    --accent-soft:#ffe3e6;
+    --blue:#2f6fed;
+    --blue-soft:#e3ebff;
+    --yellow:#ffc93c;
+    --yellow-ink:#5c4200;
+    --green:#1f9d63;
+    --ink-deep:#12131f;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --font-display:'Baloo 2', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; font-family:var(--font-body); color:var(--ink); background:var(--bg);
+  }
+  h1,h2,h3{ font-family:var(--font-display); margin:0; }
+  p{ margin:0; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+  img,svg{ display:block; }
+  button{ font-family:inherit; }
+
+  /* ================= Header ================= */
+  header.site{
+    position:sticky; top:0; z-index:40; background:rgba(243,242,238,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:16px 28px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:21px; }
+  .brand .dot{ width:11px; height:11px; border-radius:3px; background:var(--accent); display:inline-block; transform:rotate(45deg); }
+  nav.links{ display:flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:5px; }
+  nav.links button{
+    border:none; background:none; padding:9px 18px; border-radius:10px; font-weight:600; font-size:13.5px;
+    color:var(--ink-soft); cursor:pointer; transition:.15s;
+  }
+  nav.links button.active{ background:var(--ink); color:#fff; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .cart-btn{
+    position:relative; border:1px solid var(--line); background:var(--panel); width:42px; height:42px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .cart-btn svg{ width:19px; height:19px; }
+  .badge{
+    position:absolute; top:-6px; right:-6px; background:var(--accent); color:#fff;
+    font-family:var(--font-mono); font-size:10px; font-weight:600; min-width:17px; height:17px;
+    border-radius:9px; display:flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+
+  main{ display:block; }
+  .page{ display:none; animation:fadeUp .4s ease; }
+  .page.active{ display:block; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ================= Home: Hero ================= */
+  .hero-band{ background:linear-gradient(160deg, #1b1d2b, #2c2650 55%, #432a5d); color:#fff; overflow:hidden; }
+  .hero-inner{
+    max-width:var(--maxw); margin:0 auto; padding:64px 28px 70px; display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;
+  }
+  .hero-band .eyebrow{ font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; color:#ffc93c; text-transform:uppercase; }
+  .hero-band h1{ font-size:42px; line-height:1.2; margin:14px 0 16px; max-width:520px; }
+  .hero-band p.sub{ font-size:15.5px; color:#cfd0e6; max-width:420px; line-height:1.6; margin-bottom:26px; }
+  .hero-band button{
+    background:var(--accent); color:#fff; border:none; font-weight:700; font-size:14.5px;
+    padding:14px 24px; border-radius:13px; cursor:pointer;
+  }
+  .swatch-stack{ position:relative; height:280px; }
+  .swatch{
+    position:absolute; width:150px; height:230px; border-radius:26px; box-shadow:0 30px 60px -20px rgba(0,0,0,.5);
+    display:flex; align-items:center; justify-content:center; font-size:44px;
+  }
+  .swatch:nth-child(1){ left:0; top:10px; transform:rotate(-9deg); background:linear-gradient(155deg,#ffd7e0,#fff0f3); }
+  .swatch:nth-child(2){ left:100px; top:-10px; transform:rotate(4deg); background:linear-gradient(155deg,#dbe8ff,#f1f6ff); z-index:2; }
+  .swatch:nth-child(3){ left:200px; top:24px; transform:rotate(13deg); background:linear-gradient(155deg,#e8d3b0,#f5e9d3); }
+
+  /* ================= Shared section chrome ================= */
+  section.block{ padding:44px 0 6px; }
+  .section-title{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px; }
+  .section-title h2{ font-size:22px; }
+  .section-title .see-all{ font-size:13px; color:var(--blue); font-weight:600; cursor:pointer; border:none; background:none; }
+  .section-note{ font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); margin:6px 0 20px; line-height:1.6; }
+
+  .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .chip{
+    background:var(--panel); border:1px solid var(--line); border-radius:13px;
+    padding:11px 16px; font-size:13px; font-weight:600; cursor:pointer;
+    display:flex; align-items:center; gap:7px; transition:.15s;
+  }
+  .chip:hover{ border-color:var(--ink); }
+  .chip .count{ font-family:var(--font-mono); color:var(--ink-soft); font-weight:500; }
+
+  .grid-products{ display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; }
+
+  .card{
+    background:var(--panel); border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--line);
+    display:flex; flex-direction:column; transition:.18s; cursor:default;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 14px 30px -14px rgba(20,20,30,.22); }
+  .card .thumb{ height:140px; display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; }
+  .card .thumb .cam{ position:absolute; top:10px; left:12px; width:10px; height:10px; border-radius:50%; background:rgba(0,0,0,.18); }
+  .tag-clear .thumb{ background:linear-gradient(155deg,#dbe8ff,#f1f6ff); }
+  .tag-leather .thumb{ background:linear-gradient(155deg,#e8d3b0,#f5e9d3); }
+  .tag-rugged .thumb{ background:linear-gradient(155deg,#cfd6dc,#eceff2); }
+  .tag-silicone .thumb{ background:linear-gradient(155deg,#ffd7e0,#fff0f3); }
+  .tag-accessory .thumb{ background:linear-gradient(155deg,#d8f2e2,#eefaf1); }
+
+  .card .body{ padding:14px 15px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .card .name{ font-size:13.5px; font-weight:600; line-height:1.4; min-height:38px; }
+  .card .tags{ display:flex; gap:5px; flex-wrap:wrap; }
+  .card .tags span{
+    font-family:var(--font-mono); font-size:9.5px; background:var(--blue-soft); color:var(--blue);
+    padding:3px 7px; border-radius:6px; font-weight:600;
+  }
+  .card .bottom-row{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:6px; }
+  .card .price{ font-family:var(--font-mono); font-weight:700; font-size:14.5px; }
+  .card .add-btn{
+    width:32px; height:32px; border-radius:9px; border:none; background:var(--ink); color:#fff;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1;
+  }
+  .card .add-btn:hover{ background:var(--accent); }
+  .badge-pill{
+    position:absolute; top:10px; right:10px; font-family:var(--font-mono); font-size:9.5px; font-weight:700;
+    padding:3px 7px; border-radius:6px; letter-spacing:.02em;
+  }
+  .badge-new{ background:var(--yellow); color:var(--yellow-ink); }
+  .badge-sale{ background:var(--accent); color:#fff; }
+  .badge-best{ background:var(--ink); color:#fff; }
+
+  .empty-note{
+    font-size:13px; color:var(--ink-soft); background:var(--panel); border:1px dashed var(--line);
+    border-radius:var(--radius-sm); padding:22px; text-align:center; line-height:1.7;
+  }
+
+  /* ================= Products page ================= */
+  .products-layout{ display:grid; grid-template-columns:270px 1fr; gap:28px; align-items:start; }
+  .search-box{
+    display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--line);
+    border-radius:13px; padding:12px 14px; margin-bottom:16px;
+  }
+  .search-box input{ border:none; outline:none; background:none; font-size:13.5px; flex:1; color:var(--ink); font-family:var(--font-body); }
+  .search-box svg{ width:16px; height:16px; color:var(--ink-soft); flex-shrink:0; }
+
+  .filter-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md); padding:18px;
+    position:sticky; top:96px;
+  }
+  .filter-group{ margin-bottom:16px; }
+  .filter-group:last-child{ margin-bottom:0; }
+  .filter-group .flabel{ font-size:10.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:9px; display:block; }
+  .tagbtns{ display:flex; flex-wrap:wrap; gap:7px; }
+  .tagbtn{
+    border:1px solid var(--line); background:var(--bg); border-radius:9px; padding:7px 11px;
+    font-size:11.5px; font-weight:600; cursor:pointer; color:var(--ink);
+  }
+  .tagbtn.on-include{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  .tagbtn.on-exclude{ background:var(--accent); border-color:var(--accent); color:#fff; text-decoration:line-through; }
+
+  .mode-toggle{ display:flex; background:var(--bg); border-radius:9px; padding:3px; gap:3px; }
+  .mode-toggle button{
+    flex:1; border:none; background:none; padding:8px 4px; border-radius:7px; font-size:11px; font-weight:700;
+    cursor:pointer; color:var(--ink-soft);
+  }
+  .mode-toggle button.active{ background:var(--ink); color:#fff; }
+
+  .set-readout{
+    font-family:var(--font-mono); font-size:11px; background:#101223; color:#9be3c4; border-radius:10px;
+    padding:11px 13px; line-height:1.7; margin-top:14px;
+  }
+  .set-readout b{ color:#ffd76b; }
+  .result-count{ font-size:13px; color:var(--ink-soft); margin:0 0 14px; }
+  .result-count b{ color:var(--ink); }
+
+  /* ================= Checkout page ================= */
+  .checkout-layout{ display:grid; grid-template-columns:1fr 380px; gap:30px; align-items:start; }
+  .cart-row{
+    display:flex; gap:12px; align-items:center; background:var(--panel); border:1px solid var(--line);
+    border-radius:14px; padding:13px; margin-bottom:10px;
+  }
+  .cart-row .thumb-sm{ width:54px; height:54px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+  .cart-row .info{ flex:1; min-width:0; }
+  .cart-row .info .n{ font-size:13px; font-weight:600; line-height:1.35; }
+  .cart-row .info .p{ font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); margin-top:3px; }
+  .qty-ctrl{ display:flex; align-items:center; gap:8px; }
+  .qty-ctrl button{
+    width:26px; height:26px; border-radius:7px; border:1px solid var(--line); background:var(--bg);
+    cursor:pointer; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .qty-ctrl .q{ font-family:var(--font-mono); font-size:13px; font-weight:600; width:16px; text-align:center; }
+  .remove-x{ border:none; background:none; color:var(--ink-soft); font-size:16px; cursor:pointer; padding:2px 6px; }
+  .remove-x:hover{ color:var(--accent); }
+
+  .side-panel{ position:sticky; top:96px; }
+  .promo-row{ display:flex; gap:8px; margin:0 0 12px; }
+  .promo-row input{
+    flex:1; border:1px solid var(--line); background:var(--panel); border-radius:11px; padding:12px 14px;
+    font-family:var(--font-mono); font-size:12.5px; outline:none;
+  }
+  .promo-row button{
+    border:none; background:var(--ink); color:#fff; border-radius:11px; padding:0 18px; font-weight:700;
+    font-size:12.5px; cursor:pointer;
+  }
+  .promo-msg{ font-size:12px; margin:-4px 0 14px; font-weight:600; }
+  .promo-msg.ok{ color:var(--green); }
+  .promo-msg.err{ color:var(--accent); }
+
+  .receipt{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md); padding:20px; }
+  .receipt .line{ display:flex; justify-content:space-between; font-size:13px; padding:6px 0; }
+  .receipt .line.discount{ color:var(--green); }
+  .receipt hr{ border:none; border-top:1px dashed var(--line); margin:10px 0; }
+  .receipt .total{ display:flex; justify-content:space-between; font-size:17px; font-weight:700; font-family:var(--font-display); padding-top:4px; }
+  .receipt .total .amt{ font-family:var(--font-mono); }
+  .checkout-btn{
+    width:100%; margin-top:16px; border:none; background:var(--accent); color:#fff; padding:15px;
+    border-radius:13px; font-family:var(--font-display); font-size:16px; font-weight:700; cursor:pointer;
+  }
+  .checkout-btn:hover{ filter:brightness(1.05); }
+
+  .reco-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .reco-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .reco-card .thumb{ height:100px; font-size:32px; }
+  .reco-card .body{ padding:11px 12px; }
+  .reco-card .name{ font-size:12px; font-weight:600; min-height:32px; line-height:1.35; }
+  .reco-card .bottom-row{ margin-top:8px; }
+
+  footer.site{ border-top:1px solid var(--line); margin-top:60px; padding:34px 0 40px; color:var(--ink-soft); font-size:12.5px; }
+  footer.site .wrap{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+  .toast{
+    position:fixed; left:50%; bottom:30px; transform:translate(-50%,10px); background:var(--ink); color:#fff;
+    padding:13px 22px; border-radius:12px; font-size:13px; font-weight:600; z-index:100; opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s; white-space:nowrap; box-shadow:0 20px 40px -14px rgba(0,0,0,.4);
+  }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+
+  @media (max-width:980px){
+    .hero-inner{ grid-template-columns:1fr; padding-bottom:40px; }
+    .swatch-stack{ margin:0 auto; }
+    .grid-products{ grid-template-columns:repeat(3,1fr); }
+    .products-layout{ grid-template-columns:1fr; }
+    .filter-panel{ position:static; }
+    .checkout-layout{ grid-template-columns:1fr; }
+    .side-panel{ position:static; }
+    .reco-row{ grid-template-columns:repeat(3,1fr); }
+  }
+  @media (max-width:640px){
+    .nav-inner{ padding:14px 16px; }
+    nav.links{ display:none; }
+    .wrap{ padding:0 16px; }
+    .hero-band h1{ font-size:30px; }
+    .grid-products{ grid-template-columns:repeat(2,1fr); }
+    .reco-row{ grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-inner">
+    <div class="brand"><span class="dot"></span>CASECRAFT</div>
+    <nav class="links">
+      <button class="active" data-page="home">หน้าแรก</button>
+      <button data-page="products">สินค้า</button>
+      <button data-page="checkout">ตะกร้า</button>
+    </nav>
+    <div class="header-right">
+      <button class="cart-btn" data-page="checkout" aria-label="ตะกร้าสินค้า">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span class="badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ PAGE 1 : HOME ============ -->
+  <section id="page-home" class="page active">
+
+    <div class="hero-band">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow" id="heroEyebrow">NEW ARRIVALS</div>
+          <h1 id="heroTitle">ปกป้องทุกโมเมนต์<br>ของสมาร์ตโฟนคุณ</h1>
+          <p class="sub" id="heroSub">เคสและอุปกรณ์เสริมสำหรับ iPhone และ iPad คัดมาแล้วว่าใช่</p>
+          <button data-page="products">ดูสินค้าทั้งหมด →</button>
+        </div>
+        <div class="swatch-stack">
+          <div class="swatch">🎨</div>
+          <div class="swatch">📱</div>
+          <div class="swatch">🛡️</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="block">
+        <div class="section-title"><h2>หมวดหมู่สินค้า</h2></div>
+        <p class="section-note">สร้างจาก <b>new Set()</b> ที่รวบรวมแท็กของสินค้าทั้งหมดแบบไม่ซ้ำ แล้วนับจำนวนด้วย <b>.size</b></p>
+        <div class="chip-row" id="categoryChips"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-title"><h2 id="featuredTitle">สินค้าแนะนำ</h2><button class="see-all" data-page="products">ดูทั้งหมด</button></div>
+        <div class="grid-products" id="featuredGrid"></div>
+      </section>
+
+      <section class="block">
+        <div class="section-title"><h2>เพิ่งดูล่าสุด</h2></div>
+        <div id="recentWrap"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 2 : PRODUCTS ============ -->
+  <section id="page-products" class="page">
+    <div class="wrap">
+      <section class="block">
+        <div class="section-title"><h2>สินค้าทั้งหมด</h2></div>
+        <div class="products-layout">
+          <aside class="filter-panel">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+              <input id="searchInput" type="text" placeholder="ค้นหาสินค้า">
+            </div>
+            <div class="filter-group">
+              <span class="flabel">ต้องมีแท็ก (Include Set)</span>
+              <div class="tagbtns" id="includeTagBtns"></div>
+            </div>
+            <div class="filter-group">
+              <span class="flabel">ไม่เอาแท็ก (Exclude — Difference)</span>
+              <div class="tagbtns" id="excludeTagBtns"></div>
+            </div>
+            <div class="filter-group" style="margin-bottom:0;">
+              <span class="flabel">วิธีรวม Include Set</span>
+              <div class="mode-toggle">
+                <button id="modeUnion" class="active" data-mode="union">Union — ข้อใดข้อหนึ่ง</button>
+                <button id="modeInter" data-mode="inter">Intersection — ครบทุกข้อ</button>
+              </div>
+            </div>
+            <div class="set-readout" id="setReadout"></div>
+          </aside>
+
+          <div>
+            <p class="result-count" id="resultCount"></p>
+            <div class="grid-products" id="productsGrid"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 3 : CHECKOUT ============ -->
+  <section id="page-checkout" class="page">
+    <div class="wrap">
+      <section class="block">
+        <div class="section-title"><h2>ตะกร้าสินค้า / สรุปคำสั่งซื้อ</h2></div>
+        <div class="checkout-layout">
+          <div>
+            <div id="cartList"></div>
+            <div id="emptyCartNote"></div>
+          </div>
+          <div class="side-panel">
+            <div id="promoArea" style="display:none;">
+              <div class="promo-row">
+                <input id="promoInput" type="text" placeholder="ใส่โค้ดส่วนลด เช่น CASE10">
+                <button id="promoBtn">ใช้โค้ด</button>
+              </div>
+              <p class="promo-msg" id="promoMsg" style="display:none;"></p>
+              <div class="receipt" id="receipt"></div>
+              <button class="checkout-btn" id="checkoutBtn">ยืนยันคำสั่งซื้อ</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="section-title"><h2 id="recoTitle">แนะนำเพิ่มเติมสำหรับคุณ</h2></div>
+        <p class="section-note" id="recoNote"></p>
+        <div class="reco-row" id="recoScroll"></div>
+      </section>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="brand" style="font-size:15px;"><span class="dot" style="width:8px;height:8px;"></span>CASECRAFT</div>
+    <span>โปรเจกต์สาธิต Discrete Mathematics — Set &amp; Logic © 2026</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   CASECRAFT — ร้านเคสโทรศัพท์และ iPad
+   โครงสร้างข้อมูลและตรรกะยึดหลักคณิตศาสตร์ดิสครีต (Discrete Mathematics):
+     • เซต (Set)      → new Set(), .add(), .has(), .size, Union / Intersection / Difference
+     • ตรรกศาสตร์ (Logic) → if-else, && (AND), || (OR), ! (NOT)
+   ========================================================================= */
+
+/* ---------------------- 1) ข้อมูลสินค้า (Product data) ---------------------- */
+const PRODUCTS = [
+  { id:1,  name:"เคสใส iPhone 15 Pro กันกระแทก",       price:390, emoji:"📱", tags:["iphone","clear","rugged","bestseller"] },
+  { id:2,  name:"เคสหนัง iPhone 15 รุ่น MagSafe",       price:690, emoji:"🧳", tags:["iphone","leather","magsafe","new"] },
+  { id:3,  name:"เคสซิลิโคน iPhone 14 โทนพาสเทล",       price:290, emoji:"🎨", tags:["iphone","silicone","sale"] },
+  { id:4,  name:"เคสกันกระแทกทหาร iPhone 13",           price:450, emoji:"🛡️", tags:["iphone","rugged","bestseller"] },
+  { id:5,  name:"เคสใส iPad Pro 12.9 นิ้ว บางเฉียบ",     price:590, emoji:"📐", tags:["ipad","clear","new"] },
+  { id:6,  name:"เคสหนัง iPad Air พับ 3 ทบ ตั้งได้",     price:790, emoji:"📖", tags:["ipad","leather","magsafe"] },
+  { id:7,  name:"เคสซิลิโคนกันกระแทก iPad mini",         price:390, emoji:"🧊", tags:["ipad","silicone","rugged"] },
+  { id:8,  name:"สายชาร์จ MagSafe ชาร์จไว",             price:590, emoji:"🔌", tags:["accessory","magsafe","bestseller"] },
+  { id:9,  name:"ฟิล์มกระจกกันรอย iPhone (2 แผ่น)",     price:190, emoji:"✨", tags:["accessory","iphone","sale"] },
+  { id:10, name:"ฟิล์มกระจกนิรภัย iPad Pro",             price:290, emoji:"💎", tags:["accessory","ipad"] },
+  { id:11, name:"เคสการ์ดใส่บัตร MagSafe",               price:350, emoji:"💳", tags:["accessory","magsafe","new"] },
+  { id:12, name:"เคสลาย Retro iPhone 15 พลาสติกแข็ง",    price:350, emoji:"🕹️", tags:["iphone","clear","new"] },
+  { id:13, name:"เคสกันกระแทก iPad 10th Gen สายสะพาย",  price:650, emoji:"🎒", tags:["ipad","rugged","accessory"] },
+  { id:14, name:"เคสซิลิโคน iPhone 12 สีพื้น",           price:250, emoji:"🍬", tags:["iphone","silicone","bestseller"] },
+  { id:15, name:"ขาตั้ง MagSafe พับได้",                 price:320, emoji:"🪄", tags:["accessory","magsafe"] },
+  { id:16, name:"เคสหนัง iPhone SE ใส่บัตรได้",          price:420, emoji:"👛", tags:["iphone","leather","sale"] },
+];
+
+const TAG_LABELS = {
+  iphone:"iPhone", ipad:"iPad", clear:"เคสใส", leather:"หนัง", rugged:"กันกระแทก",
+  silicone:"ซิลิโคน", magsafe:"MagSafe", accessory:"อุปกรณ์เสริม", bestseller:"ขายดี",
+  new:"มาใหม่", sale:"ลดราคา"
+};
+const FILTERABLE_TAGS = ["iphone","ipad","clear","leather","rugged","silicone","magsafe","accessory"];
+
+const money = n => n.toLocaleString("th-TH");
+
+/* ---------------------- 2) พื้นที่เก็บสถานะแบบถาวร (localStorage) ---------------------- */
+const LS_CART = "casecraft_cart";
+const LS_RECENT = "casecraft_recent";
+
+function loadCart(){
+  try { return JSON.parse(localStorage.getItem(LS_CART)) || []; }
+  catch(e){ return []; }
+}
+function saveCart(cart){ localStorage.setItem(LS_CART, JSON.stringify(cart)); }
+
+function loadRecent(){
+  try { return JSON.parse(localStorage.getItem(LS_RECENT)) || []; }
+  catch(e){ return []; }
+}
+function pushRecent(id){
+  let recent = loadRecent();
+  const recentSet = new Set(recent);
+  recentSet.delete(id);
+  recent = [id, ...recentSet];
+  recent = recent.slice(0, 8);
+  localStorage.setItem(LS_RECENT, JSON.stringify(recent));
+}
+
+let cart = loadCart();
+
+/* ---------------------- 3) นำทางระหว่าง 3 หน้า (Logic: if-else) ---------------------- */
+function goPage(name){
+  document.querySelectorAll(".page").forEach(p=>{
+    if (p.id === "page-" + name) p.classList.add("active");
+    else p.classList.remove("active");
+  });
+  document.querySelectorAll("nav.links [data-page]").forEach(t=>{
+    if (t.dataset.page === name) t.classList.add("active");
+    else t.classList.remove("active");
+  });
+  window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+  if (name === "products") renderProducts();
+  if (name === "checkout") renderCheckout();
+}
+document.querySelectorAll("[data-page]").forEach(el=>{
+  el.addEventListener("click", ()=> goPage(el.dataset.page));
+});
+
+/* ---------------------- 4) ตะกร้าสินค้า: เพิ่ม/ลด/ลบ ---------------------- */
+function addToCart(id, qty=1){
+  const existing = cart.find(c=>c.id===id);
+  if (existing) existing.qty += qty;
+  else cart.push({id, qty});
+  saveCart(cart);
+  pushRecent(id);
+  updateCartBadge();
+  showToast("เพิ่มลงตะกร้าแล้ว ✓");
+  if (document.getElementById("page-home").classList.contains("active")) renderHome();
+}
+function changeQty(id, delta){
+  const item = cart.find(c=>c.id===id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(c=>c.id!==id);
+  saveCart(cart);
+  updateCartBadge();
+  renderCheckout();
+}
+function removeFromCart(id){
+  cart = cart.filter(c=>c.id!==id);
+  saveCart(cart);
+  updateCartBadge();
+  renderCheckout();
+}
+function updateCartBadge(){
+  const count = cart.reduce((sum,c)=> sum + c.qty, 0);
+  document.getElementById("cartBadge").textContent = count;
+}
+
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove("show"), 1700);
+}
+
+/* =========================================================================
+   หน้า 1: HOME
+   ========================================================================= */
+function renderHome(){
+  const categorySet = new Set();
+  PRODUCTS.forEach(p => p.tags.forEach(tag => categorySet.add(tag)));
+  document.querySelector("#page-home .section-note").innerHTML =
+    `สร้างจาก <b>new Set()</b> ที่รวบรวมแท็กของสินค้าทั้งหมดแบบไม่ซ้ำ พบทั้งหมด <b>${categorySet.size}</b> หมวดหมู่ (.size)`;
+
+  const chipWrap = document.getElementById("categoryChips");
+  chipWrap.innerHTML = "";
+  categorySet.forEach(tag=>{
+    const count = PRODUCTS.filter(p=>p.tags.includes(tag)).length;
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.innerHTML = `${TAG_LABELS[tag] || tag} <span class="count">${count}</span>`;
+    chip.addEventListener("click", ()=>{
+      goPage("products");
+      includeTags = new Set([tag]);
+      excludeTags = new Set();
+      renderProducts();
+    });
+    chipWrap.appendChild(chip);
+  });
+
+  const today = new Date();
+  const isWeekend = (today.getDay() === 0 || today.getDay() === 6);
+  const eyebrow = document.getElementById("heroEyebrow");
+  const title = document.getElementById("heroTitle");
+  const sub = document.getElementById("heroSub");
+  if (isWeekend) {
+    eyebrow.textContent = "โปรฯ วันหยุดสุดสัปดาห์ 🎉";
+    title.innerHTML = "ช้อปวันหยุด<br>ลดเพิ่มทุกออเดอร์";
+    sub.textContent = "เสาร์-อาทิตย์นี้ ส่งฟรีเมื่อซื้อครบ 990 บาท ที่หน้าตะกร้า";
+  } else {
+    eyebrow.textContent = "NEW ARRIVALS";
+    title.innerHTML = "ปกป้องทุกโมเมนต์<br>ของสมาร์ตโฟนคุณ";
+    sub.textContent = "เคสและอุปกรณ์เสริมสำหรับ iPhone และ iPad คัดมาแล้วว่าใช่";
+  }
+
+  const featured = PRODUCTS
+    .filter(p => p.tags.some(t => t === "bestseller" || t === "new"))
+    .slice(0, 4);
+  document.getElementById("featuredGrid").innerHTML = featured.map(cardHTML).join("");
+
+  const recentIds = loadRecent();
+  const recentWrap = document.getElementById("recentWrap");
+  if (recentIds.length === 0) {
+    recentWrap.innerHTML = `<div class="empty-note">ยังไม่มีสินค้าที่เพิ่งดู — ลองกดเข้าดูสินค้าชิ้นไหนก็ได้ก่อนนะ</div>`;
+  } else {
+    const recentProducts = recentIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+    recentWrap.innerHTML = `<div class="grid-products">${recentProducts.map(cardHTML).join("")}</div>`;
+  }
+
+  bindCardButtons(document.getElementById("featuredGrid"));
+  bindCardButtons(recentWrap);
+}
+
+function cardHTML(p){
+  const badge =
+    p.tags.includes("new") ? `<span class="badge-pill badge-new">NEW</span>` :
+    p.tags.includes("sale") ? `<span class="badge-pill badge-sale">SALE</span>` :
+    p.tags.includes("bestseller") ? `<span class="badge-pill badge-best">BEST</span>` : "";
+  const thumbClass = "tag-" + (p.tags.find(t=>["clear","leather","rugged","silicone","accessory"].includes(t)) || "clear");
+  return `
+  <div class="card" data-id="${p.id}">
+    <div class="thumb ${thumbClass}"><span class="cam"></span>${p.emoji}${badge}</div>
+    <div class="body">
+      <div class="name">${p.name}</div>
+      <div class="tags">${p.tags.slice(0,2).map(t=>`<span>${TAG_LABELS[t]||t}</span>`).join("")}</div>
+      <div class="bottom-row">
+        <span class="price">฿${money(p.price)}</span>
+        <button class="add-btn" data-add="${p.id}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+function bindCardButtons(container){
+  container.querySelectorAll("[data-add]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      addToCart(Number(btn.dataset.add));
+    });
+  });
+  container.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("click", ()=> pushRecent(Number(card.dataset.id)));
+  });
+}
+
+/* =========================================================================
+   หน้า 2: PRODUCTS — ใช้ Set Operations (Union / Intersection / Difference)
+   ========================================================================= */
+let includeTags = new Set();
+let excludeTags = new Set();
+let includeMode = "union";
+let searchQuery = "";
+
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderProducts();
+});
+document.getElementById("modeUnion").addEventListener("click", ()=>{ includeMode="union"; renderProducts(); });
+document.getElementById("modeInter").addEventListener("click", ()=>{ includeMode="inter"; renderProducts(); });
+
+function renderProducts(){
+  const incWrap = document.getElementById("includeTagBtns");
+  const excWrap = document.getElementById("excludeTagBtns");
+  incWrap.innerHTML = ""; excWrap.innerHTML = "";
+
+  FILTERABLE_TAGS.forEach(tag=>{
+    const b1 = document.createElement("button");
+    b1.className = "tagbtn" + (includeTags.has(tag) ? " on-include" : "");
+    b1.textContent = TAG_LABELS[tag];
+    b1.addEventListener("click", ()=>{
+      if (includeTags.has(tag)) includeTags.delete(tag);
+      else includeTags.add(tag);
+      renderProducts();
+    });
+    incWrap.appendChild(b1);
+
+    const b2 = document.createElement("button");
+    b2.className = "tagbtn" + (excludeTags.has(tag) ? " on-exclude" : "");
+    b2.textContent = TAG_LABELS[tag];
+    b2.addEventListener("click", ()=>{
+      if (excludeTags.has(tag)) excludeTags.delete(tag);
+      else excludeTags.add(tag);
+      renderProducts();
+    });
+    excWrap.appendChild(b2);
+  });
+
+  document.getElementById("modeUnion").classList.toggle("active", includeMode==="union");
+  document.getElementById("modeInter").classList.toggle("active", includeMode==="inter");
+
+  const includeArr = [...includeTags];
+  const excludeArr = [...excludeTags];
+
+  const filtered = PRODUCTS.filter(p=>{
+    const pSet = new Set(p.tags);
+    let matchInclude;
+    if (includeArr.length === 0) matchInclude = true;
+    else if (includeMode === "union") matchInclude = includeArr.some(t => pSet.has(t));
+    else matchInclude = includeArr.every(t => pSet.has(t));
+    const matchExclude = excludeArr.every(t => !pSet.has(t));
+    const matchSearch = searchQuery === "" || p.name.toLowerCase().includes(searchQuery);
+    return matchInclude && matchExclude && matchSearch;
+  });
+
+  const opSymbol = includeMode === "union" ? "∪ (Union)" : "∩ (Intersection)";
+  const incLabel = includeArr.length ? includeArr.map(t=>TAG_LABELS[t]).join(` ${includeMode==="union"?"∪":"∩"} `) : "ทั้งหมด";
+  const excLabel = excludeArr.length ? excludeArr.map(t=>TAG_LABELS[t]).join(", ") : "-";
+  document.getElementById("setReadout").innerHTML =
+    `A = { ${incLabel} } &nbsp;<b>${excludeArr.length ? "− (Difference)" : ""}</b>&nbsp; ${excludeArr.length ? `B = { ${excLabel} }` : ""}<br>` +
+    `โหมดรวม A: <b>${opSymbol}</b><br>|A|=${includeArr.length} &nbsp; |B|=${excludeArr.length} &nbsp; |ผลลัพธ์|=${filtered.length}`;
+
+  document.getElementById("resultCount").innerHTML = `พบสินค้า <b>${filtered.length}</b> จากทั้งหมด ${PRODUCTS.length} รายการ`;
+
+  const grid = document.getElementById("productsGrid");
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-note" style="grid-column:1/-1;">ไม่พบสินค้าตามเงื่อนไขที่เลือก ลองปรับตัวกรองดูนะ</div>`;
+  } else {
+    grid.innerHTML = filtered.map(cardHTML).join("");
+  }
+  bindCardButtons(grid);
+}
+
+/* =========================================================================
+   หน้า 3: CHECKOUT — ตรรกศาสตร์ (if-else, &&, ||, !) + Set สำหรับแนะนำสินค้า
+   ========================================================================= */
+let appliedPromo = false;
+
+document.getElementById("promoBtn").addEventListener("click", ()=>{
+  const code = document.getElementById("promoInput").value.trim().toUpperCase();
+  const subtotal = cart.reduce((sum,c)=>{
+    const p = PRODUCTS.find(pr=>pr.id===c.id);
+    return sum + (p ? p.price * c.qty : 0);
+  }, 0);
+  const msg = document.getElementById("promoMsg");
+  msg.style.display = "block";
+  if (code === "CASE10" && subtotal >= 300) {
+    appliedPromo = true;
+    msg.className = "promo-msg ok";
+    msg.textContent = "ใช้โค้ด CASE10 สำเร็จ ลดเพิ่ม 10% ✓";
+  } else {
+    appliedPromo = false;
+    msg.className = "promo-msg err";
+    msg.textContent = !code
+      ? "กรุณากรอกโค้ดส่วนลด"
+      : "โค้ดไม่ถูกต้อง หรือยอดสั่งซื้อยังไม่ถึง ฿300";
+  }
+  renderCheckout();
+});
+document.getElementById("checkoutBtn").addEventListener("click", ()=>{
+  showToast("สั่งซื้อสำเร็จ ขอบคุณที่อุดหนุนค่ะ 🎉");
+  cart = [];
+  appliedPromo = false;
+  saveCart(cart);
+  updateCartBadge();
+  renderCheckout();
+});
+
+function renderCheckout(){
+  const cartList = document.getElementById("cartList");
+  const promoArea = document.getElementById("promoArea");
+  const emptyNote = document.getElementById("emptyCartNote");
+
+  if (cart.length === 0) {
+    cartList.innerHTML = "";
+    promoArea.style.display = "none";
+    emptyNote.innerHTML = `<div class="empty-note">ตะกร้ายังว่างอยู่ — ไปเลือกเคสที่ถูกใจกันเถอะ</div>`;
+  } else {
+    emptyNote.innerHTML = "";
+    promoArea.style.display = "block";
+
+    cartList.innerHTML = cart.map(c=>{
+      const p = PRODUCTS.find(pr=>pr.id===c.id);
+      if (!p) return "";
+      const thumbClass = "tag-" + (p.tags.find(t=>["clear","leather","rugged","silicone","accessory"].includes(t)) || "clear");
+      return `
+      <div class="cart-row">
+        <div class="thumb-sm ${thumbClass}">${p.emoji}</div>
+        <div class="info">
+          <div class="n">${p.name}</div>
+          <div class="p">฿${money(p.price)} × ${c.qty}</div>
+        </div>
+        <div class="qty-ctrl">
+          <button data-dec="${p.id}">−</button>
+          <span class="q">${c.qty}</span>
+          <button data-inc="${p.id}">+</button>
+        </div>
+        <button class="remove-x" data-remove="${p.id}">✕</button>
+      </div>`;
+    }).join("");
+
+    cartList.querySelectorAll("[data-inc]").forEach(b=>b.addEventListener("click", ()=>changeQty(Number(b.dataset.inc), 1)));
+    cartList.querySelectorAll("[data-dec]").forEach(b=>b.addEventListener("click", ()=>changeQty(Number(b.dataset.dec), -1)));
+    cartList.querySelectorAll("[data-remove]").forEach(b=>b.addEventListener("click", ()=>removeFromCart(Number(b.dataset.remove))));
+
+    renderReceipt();
+  }
+
+  renderRecommendations();
+}
+
+function renderReceipt(){
+  const subtotal = cart.reduce((sum, c)=>{
+    const p = PRODUCTS.find(pr=>pr.id===c.id);
+    return sum + (p ? p.price * c.qty : 0);
+  }, 0);
+  const itemCount = cart.reduce((sum, c)=> sum + c.qty, 0);
+
+  const cartTagSet = new Set();
+  cart.forEach(c=>{
+    const p = PRODUCTS.find(pr=>pr.id===c.id);
+    if (p) p.tags.forEach(t=>cartTagSet.add(t));
+  });
+
+  let discount = 0;
+  const notes = [];
+
+  if (cartTagSet.has("iphone") && cartTagSet.has("accessory")) {
+    const d = Math.round(subtotal * 0.05);
+    discount += d;
+    notes.push({label:"ส่วนลดคอมโบ iPhone + อุปกรณ์เสริม (5%)", amt:d});
+  }
+  if (itemCount >= 3 || subtotal >= 1500) {
+    const d = Math.round(subtotal * 0.10);
+    discount += d;
+    notes.push({label:"ส่วนลดซื้อคุ้ม (ครบ 3 ชิ้น หรือ ฿1,500+) 10%", amt:d});
+  }
+  if (appliedPromo) {
+    const d = Math.round(subtotal * 0.10);
+    discount += d;
+    notes.push({label:"โค้ด CASE10 (10%)", amt:d});
+  }
+
+  const afterDiscount = subtotal - discount;
+  const shipping = afterDiscount >= 990 ? 0 : 50;
+  const total = afterDiscount + shipping;
+
+  const receipt = document.getElementById("receipt");
+  receipt.innerHTML = `
+    <div class="line"><span>ยอดรวมสินค้า (${itemCount} ชิ้น)</span><span>฿${money(subtotal)}</span></div>
+    ${notes.map(n=>`<div class="line discount"><span>${n.label}</span><span>−฿${money(n.amt)}</span></div>`).join("")}
+    <div class="line"><span>ค่าจัดส่ง ${shipping===0 ? "(ฟรี — ครบ ฿990)" : ""}</span><span>${shipping===0 ? "฿0" : "฿"+money(shipping)}</span></div>
+    <hr>
+    <div class="total"><span>ยอดชำระทั้งหมด</span><span class="amt">฿${money(total)}</span></div>
+  `;
+}
+
+function renderRecommendations(){
+  const recoTitle = document.getElementById("recoTitle");
+  const recoNote = document.getElementById("recoNote");
+  const recoScroll = document.getElementById("recoScroll");
+
+  const cartIdSet = new Set(cart.map(c=>c.id));
+
+  let recommended;
+  if (cart.length === 0) {
+    recoTitle.textContent = "สินค้าขายดี";
+    recoNote.textContent = "ยังไม่มีสินค้าในตะกร้า จึงแนะนำสินค้าขายดีก่อน";
+    recommended = PRODUCTS.filter(p => p.tags.includes("bestseller"));
+  } else {
+    const cartTagSet = new Set();
+    cart.forEach(c=>{
+      const p = PRODUCTS.find(pr=>pr.id===c.id);
+      if (p) p.tags.forEach(t=>cartTagSet.add(t));
+    });
+    recoTitle.textContent = "แนะนำเพิ่มเติมสำหรับคุณ";
+    recoNote.innerHTML = `หาโดย <b>Set Difference</b>: สินค้าที่มีแท็กร่วมกับของในตะกร้า แต่ <b>ยังไม่อยู่</b> ในตะกร้า (.has() + !)`;
+    recommended = PRODUCTS.filter(p =>
+      !cartIdSet.has(p.id) &&
+      p.tags.some(t => cartTagSet.has(t))
+    );
+  }
+  recommended = recommended.filter(p=>!cartIdSet.has(p.id)).slice(0, 4);
+
+  recoScroll.innerHTML = recommended.map(p=>{
+    const thumbClass = "tag-" + (p.tags.find(t=>["clear","leather","rugged","silicone","accessory"].includes(t)) || "clear");
+    return `
+    <div class="reco-card" data-id="${p.id}">
+      <div class="thumb ${thumbClass}">${p.emoji}</div>
+      <div class="body">
+        <div class="name">${p.name}</div>
+        <div class="bottom-row">
+          <span class="price">฿${money(p.price)}</span>
+          <button class="add-btn" data-add="${p.id}">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  bindCardButtons(recoScroll);
+}
+
+/* ---------------------- เริ่มต้นแอป ---------------------- */
+updateCartBadge();
+renderHome();
+</script>
+</body>
+</html>
